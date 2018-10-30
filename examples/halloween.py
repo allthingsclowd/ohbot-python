@@ -9,6 +9,7 @@ Blog: https://allthingscloud.eu
 """
 
 import RPi.GPIO as GPIO
+from subprocess import call
 import time
 
 # import the ohbot module
@@ -21,7 +22,7 @@ def get_steven_to_talk():
     Returns:
         Boolean True or False depending on whether run successfully or not
     """
-    
+
     try:
         # Reset Ohbot
 
@@ -92,24 +93,33 @@ def get_steven_to_talk():
     except:
         return False
 
+def play_fart():
+    print("FARTING")
+    call(["aplay","/ohbot-python/examples/fart-04.wav"])
+    return
 
 def main():
 
+    ohbot.reset()
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(11, GPIO.IN)         #Read output from PIR motion sensor
-    GPIO.setup(13, GPIO.IN)         #Read output from BUTTON sensor
-    BUSY=False
+    GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from PIR motion sensor
+    GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from BUTTON sensor
 
     while True:
-        
-        PIR=GPIO.input(11)
-        BUTTON=GPIO.input(13)
-        if (PIR==1 or BUTTON==1) and not BUSY:                #When output from motion sensor is High
-            BUSY=True
-            get_steven_to_talk()
-            BUSY=False
 
+        PIR=GPIO.input(8)
+        BUTTON=GPIO.input(10)
+        print(PIR)
+        print(BUTTON)
+        if (PIR==1):                #When output from motion sensor is High
+            get_steven_to_talk()
+            print("PIR")
+            time.sleep(0.1)
+        if (BUTTON==1):
+            play_fart()
+            time.sleep(0.1)
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     main()
