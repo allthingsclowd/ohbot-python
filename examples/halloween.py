@@ -94,27 +94,31 @@ def get_steven_to_talk():
     except:
         return False
 
-def play_sound():
-    
-    items = ['/ohbot-python/examples/Fart.wav', 
-            '/ohbot-python/examples/Little_Demon_Girl_Song.wav', 
-            '/ohbot-python/examples/Scary_Scream.wav', 
-            '/ohbot-python/examples/Demon_Girls_Mockingbird.wav']
+def play_random_sound(items):
     
     rand_item = random.choice(items)
+    play_sound(rand_item)
+    return
+
+def play_sound(item):
     
-    call(["aplay",rand_item])
+    call(["aplay",item])
     return
 
 def main():
+    items = ['/ohbot-python/examples/Fart.wav',  
+            '/ohbot-python/examples/Scary_Scream.wav', 
+            '/ohbot-python/examples/Demon_Girls_Mockingbird.wav']
 
     ohbot.reset()
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from PIR motion sensor
     GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from BUTTON sensor
+    play_sound(items[1])
     get_steven_to_talk()
-    play_sound()
+    play_sound(items[1])
+    play_random_sound(items)
     start_time = time.time()
     elapsed_time = time.time() - start_time
 
@@ -128,14 +132,16 @@ def main():
         if (PIR==1):                #When output from motion sensor is High
             print("Elapsed time: %n",elapsed_time)
             if elapsed_time > 59:
+                play_sound(items[1])
                 get_steven_to_talk()
+                play_sound(items[1])
                 start_time = time.time()
                 elapsed_time = time.time() - start_time
             else:
                 elapsed_time = time.time() - start_time
 
         if (BUTTON==1):
-            play_sound()
+            play_random_sound(items)
 
         time.sleep(0.1)
 
