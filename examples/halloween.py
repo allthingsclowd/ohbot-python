@@ -94,7 +94,6 @@ def get_steven_to_talk():
         return False
 
 def play_fart():
-    print("FARTING")
     call(["aplay","/ohbot-python/examples/fart-04.wav"])
     return
 
@@ -105,6 +104,7 @@ def main():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from PIR motion sensor
     GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from BUTTON sensor
+    elapsed_time=181
 
     while True:
 
@@ -112,13 +112,18 @@ def main():
         BUTTON=GPIO.input(10)
         print(PIR)
         print(BUTTON)
+        start_time = time.time()
+        
         if (PIR==1):                #When output from motion sensor is High
-            get_steven_to_talk()
-            print("PIR")
-            time.sleep(0.1)
+            if elapsed_time > 180:
+                get_steven_to_talk()
+                elapsed_time = time.time() - start_time
+            else:
+                elapsed_time = time.time() - start_time
+            
         if (BUTTON==1):
             play_fart()
-            time.sleep(0.1)
+        
         time.sleep(0.1)
 
 if __name__ == "__main__":
