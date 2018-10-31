@@ -2,9 +2,9 @@
 
 create_service () {
   if [ ! -f /etc/systemd/system/${1}.service ]; then
-    
+
     create_service_user ${1}
-    
+
     sudo tee /etc/systemd/system/${1}.service <<EOF
 ### BEGIN INIT INFO
 # Provides:          ${1}
@@ -43,14 +43,17 @@ EOF
 }
 
 create_service_user () {
-  
+
   if ! grep ${1} /etc/passwd >/dev/null 2>&1; then
-    echo "Creating ${1} user to run the consul service"
+    echo "Creating ${1} user to run the halloween service"
     sudo useradd --system --home /etc/${1}.d --shell /bin/false ${1}
     sudo mkdir --parents /opt/${1} /usr/local/${1} /etc/${1}.d
     sudo chown --recursive ${1}:${1} /opt/${1} /etc/${1}.d /usr/local/${1}
+    sudo usermod -a -G docker ${1}
   fi
 
 }
 
-create_service halloween "halloween robot service" "docker container run -dit --name ohbot10 --device /dev/ttyACM0 --device /dev/snd --device /dev/gpiomem allthingscloud/ohbot-rpi"
+create_service halloween "halloween robot service" "/usr/bin/docker container run -dit --device /dev/ttyACM0 --device /dev/snd --device /dev/gpiomem allthingscloud/ohbot-rpi"
+sudo systemctl start halloween
+sudo systemctl status halloween
