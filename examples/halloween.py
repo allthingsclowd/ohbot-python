@@ -11,6 +11,7 @@ Blog: https://allthingscloud.eu
 import RPi.GPIO as GPIO
 from subprocess import call
 import time
+import random
 
 # import the ohbot module
 
@@ -93,8 +94,16 @@ def get_steven_to_talk():
     except:
         return False
 
-def play_fart():
-    call(["aplay","/ohbot-python/examples/fart-04.wav"])
+def play_sound():
+    
+    items = ['/ohbot-python/examples/Fart.wav', 
+            '/ohbot-python/examples/Little_Demon_Girl_Song.wav', 
+            '/ohbot-python/examples/Scary_Scream.wav', 
+            '/ohbot-python/examples/Demon_Girls_Mockingbird.wav']
+    
+    rand_item = random.choice(items)
+    
+    call(["aplay",rand_item])
     return
 
 def main():
@@ -104,9 +113,9 @@ def main():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from PIR motion sensor
     GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from BUTTON sensor
-    start_time = time.time()
     get_steven_to_talk()
-    play_fart()
+    play_sound()
+    start_time = time.time()
     elapsed_time = time.time() - start_time
 
     while True:
@@ -121,11 +130,12 @@ def main():
             if elapsed_time > 59:
                 get_steven_to_talk()
                 start_time = time.time()
+                elapsed_time = time.time() - start_time
             else:
                 elapsed_time = time.time() - start_time
 
         if (BUTTON==1):
-            play_fart()
+            play_sound()
 
         time.sleep(0.1)
 
