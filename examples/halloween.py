@@ -59,36 +59,36 @@ def get_steven_to_talk():
 
         # Move head left to right
         ohbot.move(ohbot.HEADTURN,4,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.move(ohbot.HEADTURN,6,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.move(ohbot.HEADTURN,5,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.eyeColour(0,10,0)
         ohbot.wait(0.5)
         ohbot.move(ohbot.HEADNOD,7,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.move(ohbot.HEADNOD,1,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.move(ohbot.EYETURN,9,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.move(ohbot.EYETURN,1,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.move(ohbot.EYETURN,5,1)
-        ohbot.wait(1)
+        ohbot.wait(0.5)
         ohbot.say("Take one sweet.",True, False, False,0)
         ohbot.wait(0.5)
         ohbot.say("At your own risk",True, False, False,0)
         ohbot.wait(0.5)
         ohbot.say("Don't forget to brush your teeth",True, False, False,0)
-        ohbot.wait(0.55)
+        ohbot.wait(0.5)
         ohbot.say("Happy Halloween",True, False, False,0)
-        ohbot.wait(0.55)
+        ohbot.wait(0.5)
         ohbot.reset()
         # close ohbot at the end.
-        ohbot.wait(5)
+        ohbot.wait(0.5)
         ohbot.close()
-        ohbot.wait(5)
+        ohbot.wait(0.5)
         return True
     except:
         return False
@@ -104,7 +104,10 @@ def main():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from PIR motion sensor
     GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)         #Read output from BUTTON sensor
-    elapsed_time=181
+    start_time = time.time()
+    get_steven_to_talk()
+    play_fart()
+    elapsed_time = time.time() - start_time
 
     while True:
 
@@ -112,18 +115,18 @@ def main():
         BUTTON=GPIO.input(10)
         print(PIR)
         print(BUTTON)
-        start_time = time.time()
-        
+
         if (PIR==1):                #When output from motion sensor is High
-            if elapsed_time > 180:
+            print("Elapsed time: %n",elapsed_time)
+            if elapsed_time > 59:
                 get_steven_to_talk()
-                elapsed_time = time.time() - start_time
+                start_time = time.time()
             else:
                 elapsed_time = time.time() - start_time
-            
+
         if (BUTTON==1):
             play_fart()
-        
+
         time.sleep(0.1)
 
 if __name__ == "__main__":
